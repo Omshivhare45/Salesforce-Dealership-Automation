@@ -7,26 +7,26 @@
 <title>Take A Drive | Admin CRM</title>
 <style>
 :root {
-  --bg:#0b0d11; --panel:#12161d; --line:#272e39;
-  --text:#f3f5f8; --muted:#8f99a8; --orange:#ff7a35;
-  --green:#37d39a; --red:#ff6868; --yellow:#f7bd57;
+  --bg:#f3eee6; --panel:#fffaf3; --line:#ddd3c5;
+  --text:#25231f; --muted:#746f66; --orange:#b85b3e;
+  --green:#3d8068; --red:#af584f; --yellow:#a97932;
 }
 * { box-sizing:border-box; margin:0; padding:0 }
 body {
   font-family:Inter,system-ui,"Segoe UI",sans-serif;
-  background:radial-gradient(ellipse at 85% 0%,#2a1a13,transparent 30%),var(--bg);
+  background:linear-gradient(135deg,rgba(255,255,255,.55),transparent 45%),repeating-linear-gradient(0deg,transparent 0 5px,rgba(73,55,38,.025) 6px),var(--bg);
   color:var(--text); min-height:100vh;
 }
 button,input,select { font:inherit }
 button { cursor:pointer }
 .app { min-height:100vh; display:grid; grid-template-columns:230px 1fr }
-.sidebar { background:#0e1116; border-right:1px solid var(--line); padding:28px 17px }
+.sidebar { background:#e8dfd2; border-right:1px solid var(--line); padding:28px 17px }
 .logo { font-size:21px; font-weight:900; letter-spacing:-1px; padding:0 8px }
 .logo span { color:var(--orange) }
 .sub { color:var(--muted); font-size:10px; letter-spacing:2px; padding:8px }
 .nav-title { margin:40px 10px 12px; color:#657080; font-size:10px; letter-spacing:2px }
 .nav { padding:13px; border-radius:10px; margin:7px 0; font-size:13px; color:#aeb7c5 }
-.nav.active { color:white; background:#ff7a3520; border:1px solid #ff7a3538 }
+.nav.active { color:#713522; background:#b85b3e18; border:1px solid #b85b3e4d }
 .sidebar-foot { margin-top:55px; padding:14px; border:1px solid var(--line); border-radius:12px; color:var(--muted); font-size:11px; line-height:1.8 }
 .main { min-width:0; padding:32px; max-width:1600px; width:100%; margin:auto }
 .topbar { display:flex; justify-content:space-between; align-items:center; gap:18px; margin-bottom:28px }
@@ -39,25 +39,25 @@ h1 { font-size:clamp(27px,3vw,38px); letter-spacing:-1.5px }
 .dot.online { background:var(--green) }
 .refresh { border:0; background:var(--orange); color:#1a100b; font-size:12px; font-weight:850; padding:12px 15px; border-radius:9px }
 .stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-bottom:22px }
-.stat { border:1px solid var(--line); border-radius:15px; background:linear-gradient(145deg,#171c24,#11151b); padding:20px }
+.stat { border:1px solid var(--line); border-radius:8px; background:linear-gradient(145deg,#fffaf3,#f8f0e5); padding:20px; box-shadow:0 12px 30px rgba(84,62,41,.07) }
 .stat-label { color:var(--muted); font-size:10px; font-weight:800; letter-spacing:1px }
 .stat-number { font-size:31px; font-weight:850; margin-top:15px }
 .stat-note { color:#758091; font-size:10px; margin-top:5px }
-.panel { border:1px solid var(--line); border-radius:15px; background:var(--panel); overflow:hidden }
+.panel { border:1px solid var(--line); border-radius:8px; background:var(--panel); overflow:hidden; box-shadow:0 16px 40px rgba(84,62,41,.08) }
 .panel-head { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; padding:21px; border-bottom:1px solid var(--line) }
 .panel-title { font-size:16px; font-weight:800 }
 .panel-desc { color:var(--muted); font-size:11px; margin-top:5px }
 .filters { display:flex; gap:9px; flex-wrap:wrap }
-.filters input,.filters select { background:#0d1117; color:white; border:1px solid #303744; border-radius:9px; padding:10px 12px; font-size:12px; outline:none }
+.filters input,.filters select { background:#f8f2e9; color:var(--text); border:1px solid var(--line); border-radius:6px; padding:10px 12px; font-size:12px; outline:none }
 .filters input { width:230px }
 .filters input:focus,.filters select:focus { border-color:var(--orange) }
 .table-wrap { overflow-x:auto }
 table { width:100%; border-collapse:collapse; min-width:940px }
-th { text-align:left; padding:14px 16px; color:#778293; font-size:9px; letter-spacing:1px; text-transform:uppercase; background:#10141a }
-td { padding:16px; border-top:1px solid #242a34; font-size:12px; vertical-align:middle }
+th { text-align:left; padding:14px 16px; color:#81776b; font-size:9px; letter-spacing:1px; text-transform:uppercase; background:#f3eadf }
+td { padding:16px; border-top:1px solid #e8ded2; font-size:12px; vertical-align:middle }
 tbody tr:hover { background:#ffffff05 }
 .customer { display:flex; align-items:center; gap:10px }
-.avatar { width:34px; height:34px; display:grid; place-items:center; border-radius:10px; background:#38251c; color:#ffb17f; font-size:11px; font-weight:900 }
+.avatar { width:34px; height:34px; display:grid; place-items:center; border-radius:8px; background:#ead1c2; color:#713522; font-size:11px; font-weight:900 }
 .customer-name { font-weight:750 }
 .muted { color:var(--muted); font-size:10px; margin-top:5px; overflow-wrap:anywhere }
 .badge { display:inline-block; border-radius:7px; padding:6px 8px; font-size:10px; font-weight:800; white-space:nowrap }
@@ -66,10 +66,10 @@ tbody tr:hover { background:#ffffff05 }
 .badge.pending,.badge.reschedule { color:var(--yellow); background:#f7bd5715; border:1px solid #f7bd5735 }
 .badge.neutral { color:#aeb7c5; background:#8993a112; border:1px solid #8993a125 }
 .actions { display:flex; gap:6px; flex-wrap:wrap; min-width:220px }
-.action-btn { border:1px solid #303744; background:#171c24; color:#c8d0dc; padding:8px 9px; border-radius:8px; font-size:10px; font-weight:800 }
-.action-btn.approve { background:#17382f; color:#6be5b4; border-color:#245b49 }
-.action-btn.reject { background:#3a2024; color:#ff8a8a; border-color:#66343a }
-.action-btn.reschedule { background:#382c1b; color:#f6c16d; border-color:#594323 }
+.action-btn { border:1px solid var(--line); background:#f8f2e9; color:#625a50; padding:8px 9px; border-radius:6px; font-size:10px; font-weight:800 }
+.action-btn.approve { background:#e4f0e9; color:#28634d; border-color:#aacbb9 }
+.action-btn.reject { background:#f5e5e2; color:#934b45; border-color:#d8aaa3 }
+.action-btn.reschedule { background:#f5ecd9; color:#886526; border-color:#d9bd81 }
 .action-btn:disabled { opacity:.5; cursor:wait }
 .message { display:none; margin:14px 20px 0; padding:12px; border-radius:9px; font-size:12px; overflow-wrap:anywhere }
 .message.show { display:block }
