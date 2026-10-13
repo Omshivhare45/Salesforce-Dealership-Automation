@@ -196,12 +196,17 @@ function requireSalesforce(req, res, next) {
 // Get recent Leads
 app.get("/api/leads", requireSalesforce, async (req, res) => {
   try {
-    const result = await salesforceConnection.query(`
-      SELECT Id, FirstName, LastName, Email, Company, City, Status, CreatedDate
-      FROM Lead
-      ORDER BY CreatedDate DESC
-      LIMIT 100
-    `);
+    
+const result = await salesforceConnection.query(`
+  SELECT Id, FirstName, LastName, Email, Company,
+         City, State, Phone, MobilePhone,
+         Status, Test_Drive_Status__c, CreatedDate
+  FROM Lead
+  ORDER BY CreatedDate DESC
+  LIMIT 100
+`);
+
+
     res.json(result.records);
   } catch (error) {
     console.error("Lead query error:", error);

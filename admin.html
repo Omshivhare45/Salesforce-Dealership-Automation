@@ -1,861 +1,332 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Take A Drive | Admin Dashboard</title>
-
-  <style>
-    :root {
-      --bg: #f5f6f8;
-      --surface: #ffffff;
-      --text: #20242c;
-      --muted: #737b89;
-      --border: #e6e8ed;
-      --accent: #f07835;
-      --green: #18865b;
-      --red: #d74747;
-      --blue: #3769cc;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: Inter, "Segoe UI", Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
-
-    button, input, select {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    .layout {
-      min-height: 100vh;
-      display: flex;
-    }
-
-    .sidebar {
-      width: 245px;
-      background: #20242c;
-      color: white;
-      padding: 28px 18px;
-      flex-shrink: 0;
-    }
-
-    .brand {
-      font-size: 21px;
-      font-weight: 800;
-      letter-spacing: -0.7px;
-      padding: 0 10px 30px;
-    }
-
-    .brand span {
-      color: var(--accent);
-    }
-
-    .nav-label {
-      color: #8c94a3;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      padding: 0 10px;
-      margin-bottom: 12px;
-    }
-
-    .nav-item {
-      padding: 13px 12px;
-      border-radius: 9px;
-      margin-bottom: 7px;
-      font-size: 14px;
-      color: #c8ced8;
-    }
-
-    .nav-item.active {
-      color: white;
-      background: #383d47;
-      border-left: 3px solid var(--accent);
-    }
-
-    .sidebar-bottom {
-      margin-top: 40px;
-      padding: 15px 10px;
-      color: #aeb6c4;
-      font-size: 12px;
-      line-height: 1.8;
-    }
-
-    .main {
-      min-width: 0;
-      flex: 1;
-      padding: 32px;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 18px;
-      margin-bottom: 30px;
-    }
-
-    .eyebrow {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--accent);
-      letter-spacing: 1.5px;
-      margin-bottom: 8px;
-    }
-
-    h1 {
-      font-size: clamp(25px, 3vw, 34px);
-      letter-spacing: -1px;
-    }
-
-    .subtitle {
-      color: var(--muted);
-      font-size: 14px;
-      margin-top: 8px;
-    }
-
-    .refresh-btn {
-      border: 1px solid var(--border);
-      background: white;
-      padding: 11px 16px;
-      border-radius: 9px;
-      font-weight: 650;
-      white-space: nowrap;
-    }
-
-    .refresh-btn:hover {
-      border-color: var(--accent);
-    }
-
-    .connection {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 12px;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      background: #d69a35;
-      border-radius: 50%;
-    }
-
-    .dot.online {
-      background: var(--green);
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 17px;
-      margin-bottom: 27px;
-    }
-
-    .stat {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 21px;
-      border-radius: 13px;
-    }
-
-    .stat-label {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 15px;
-    }
-
-    .stat-number {
-      font-size: 29px;
-      font-weight: 800;
-      letter-spacing: -1px;
-    }
-
-    .stat-note {
-      color: var(--muted);
-      font-size: 11px;
-      margin-top: 8px;
-    }
-
-    .panel {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      overflow: hidden;
-    }
-
-    .panel-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-      padding: 22px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .panel-head h2 {
-      font-size: 18px;
-    }
-
-    .panel-head p {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 6px;
-    }
-
-    .filters {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .filters input,
-    .filters select {
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: white;
-      outline: none;
-      font-size: 13px;
-    }
-
-    .filters input:focus,
-    .filters select:focus {
-      border-color: var(--accent);
-    }
-
-    .table-wrap {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 950px;
-    }
-
-    th {
-      background: #fafbfc;
-      color: #747d8b;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      text-align: left;
-      padding: 15px 17px;
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 17px;
-      border-top: 1px solid #eff0f3;
-      font-size: 13px;
-      vertical-align: middle;
-    }
-
-    tbody tr:hover {
-      background: #fcfcfd;
-    }
-
-    .lead-name {
-      font-weight: 700;
-      margin-bottom: 5px;
-    }
-
-    .muted {
-      color: var(--muted);
-      font-size: 11px;
-      overflow-wrap: anywhere;
-    }
-
-    .badge {
-      display: inline-block;
-      border-radius: 20px;
-      padding: 6px 9px;
-      font-size: 11px;
-      font-weight: 700;
-      background: #eef0f3;
-      color: #555d6a;
-      white-space: nowrap;
-    }
-
-    .badge.approved,
-    .badge.completed {
-      background: #e5f6ee;
-      color: #17784f;
-    }
-
-    .badge.rejected,
-    .badge.cancelled {
-      background: #ffeded;
-      color: #bc3838;
-    }
-
-    .badge.pending,
-    .badge.reschedule {
-      background: #fff2df;
-      color: #a76613;
-    }
-
-    .actions {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      min-width: 230px;
-    }
-
-    .action-btn {
-      border: 1px solid var(--border);
-      background: white;
-      padding: 7px 9px;
-      border-radius: 7px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .action-btn.approve {
-      background: #e9f7ef;
-      color: #16774c;
-      border-color: #c9ebd7;
-    }
-
-    .action-btn.reject {
-      background: #fff0f0;
-      color: #bc3838;
-      border-color: #f5d1d1;
-    }
-
-    .action-btn.reschedule {
-      background: #fff5e7;
-      color: #996016;
-      border-color: #f3dfbd;
-    }
-
-    .action-btn:disabled {
-      opacity: 0.55;
-      cursor: wait;
-    }
-
-    .message {
-      display: none;
-      margin: 18px 22px;
-      padding: 13px 15px;
-      border-radius: 8px;
-      font-size: 13px;
-      overflow-wrap: anywhere;
-    }
-
-    .message.show {
-      display: block;
-    }
-
-    .message.error {
-      background: #fff0f0;
-      color: #ad3030;
-    }
-
-    .message.success {
-      background: #e9f7ef;
-      color: #16774c;
-    }
-
-    .empty {
-      text-align: center;
-      color: var(--muted);
-      padding: 45px 20px;
-    }
-
-    .footer {
-      color: var(--muted);
-      text-align: center;
-      font-size: 11px;
-      margin-top: 24px;
-    }
-
-    @media (max-width: 1100px) {
-      .stats {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .main {
-        padding: 24px;
-      }
-    }
-
-    @media (max-width: 700px) {
-      .layout {
-        display: block;
-      }
-
-      .sidebar {
-        width: 100%;
-        padding: 18px;
-      }
-
-      .brand {
-        padding: 0 5px 15px;
-      }
-
-      .nav-label,
-      .nav-item,
-      .sidebar-bottom {
-        display: none;
-      }
-
-      .main {
-        padding: 20px 14px;
-      }
-
-      .topbar {
-        align-items: flex-start;
-      }
-
-      .stats {
-        gap: 10px;
-      }
-
-      .stat {
-        padding: 15px;
-      }
-
-      .stat-number {
-        font-size: 24px;
-      }
-
-      .panel-head {
-        padding: 16px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Take A Drive | Admin CRM</title>
+<style>
+:root {
+  --bg:#0b0d11; --panel:#12161d; --line:#272e39;
+  --text:#f3f5f8; --muted:#8f99a8; --orange:#ff7a35;
+  --green:#37d39a; --red:#ff6868; --yellow:#f7bd57;
+}
+* { box-sizing:border-box; margin:0; padding:0 }
+body {
+  font-family:Inter,system-ui,"Segoe UI",sans-serif;
+  background:radial-gradient(ellipse at 85% 0%,#2a1a13,transparent 30%),var(--bg);
+  color:var(--text); min-height:100vh;
+}
+button,input,select { font:inherit }
+button { cursor:pointer }
+.app { min-height:100vh; display:grid; grid-template-columns:230px 1fr }
+.sidebar { background:#0e1116; border-right:1px solid var(--line); padding:28px 17px }
+.logo { font-size:21px; font-weight:900; letter-spacing:-1px; padding:0 8px }
+.logo span { color:var(--orange) }
+.sub { color:var(--muted); font-size:10px; letter-spacing:2px; padding:8px }
+.nav-title { margin:40px 10px 12px; color:#657080; font-size:10px; letter-spacing:2px }
+.nav { padding:13px; border-radius:10px; margin:7px 0; font-size:13px; color:#aeb7c5 }
+.nav.active { color:white; background:#ff7a3520; border:1px solid #ff7a3538 }
+.sidebar-foot { margin-top:55px; padding:14px; border:1px solid var(--line); border-radius:12px; color:var(--muted); font-size:11px; line-height:1.8 }
+.main { min-width:0; padding:32px; max-width:1600px; width:100%; margin:auto }
+.topbar { display:flex; justify-content:space-between; align-items:center; gap:18px; margin-bottom:28px }
+.kicker { color:#ff9b5e; font-size:10px; letter-spacing:2px; font-weight:850; margin-bottom:9px }
+h1 { font-size:clamp(27px,3vw,38px); letter-spacing:-1.5px }
+.subtitle { color:var(--muted); font-size:13px; margin-top:9px }
+.top-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap }
+.connection { display:flex; align-items:center; gap:8px; color:var(--muted); font-size:11px; border:1px solid var(--line); padding:10px; border-radius:9px }
+.dot { width:7px; height:7px; background:var(--yellow); border-radius:50% }
+.dot.online { background:var(--green) }
+.refresh { border:0; background:var(--orange); color:#1a100b; font-size:12px; font-weight:850; padding:12px 15px; border-radius:9px }
+.stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-bottom:22px }
+.stat { border:1px solid var(--line); border-radius:15px; background:linear-gradient(145deg,#171c24,#11151b); padding:20px }
+.stat-label { color:var(--muted); font-size:10px; font-weight:800; letter-spacing:1px }
+.stat-number { font-size:31px; font-weight:850; margin-top:15px }
+.stat-note { color:#758091; font-size:10px; margin-top:5px }
+.panel { border:1px solid var(--line); border-radius:15px; background:var(--panel); overflow:hidden }
+.panel-head { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; padding:21px; border-bottom:1px solid var(--line) }
+.panel-title { font-size:16px; font-weight:800 }
+.panel-desc { color:var(--muted); font-size:11px; margin-top:5px }
+.filters { display:flex; gap:9px; flex-wrap:wrap }
+.filters input,.filters select { background:#0d1117; color:white; border:1px solid #303744; border-radius:9px; padding:10px 12px; font-size:12px; outline:none }
+.filters input { width:230px }
+.filters input:focus,.filters select:focus { border-color:var(--orange) }
+.table-wrap { overflow-x:auto }
+table { width:100%; border-collapse:collapse; min-width:940px }
+th { text-align:left; padding:14px 16px; color:#778293; font-size:9px; letter-spacing:1px; text-transform:uppercase; background:#10141a }
+td { padding:16px; border-top:1px solid #242a34; font-size:12px; vertical-align:middle }
+tbody tr:hover { background:#ffffff05 }
+.customer { display:flex; align-items:center; gap:10px }
+.avatar { width:34px; height:34px; display:grid; place-items:center; border-radius:10px; background:#38251c; color:#ffb17f; font-size:11px; font-weight:900 }
+.customer-name { font-weight:750 }
+.muted { color:var(--muted); font-size:10px; margin-top:5px; overflow-wrap:anywhere }
+.badge { display:inline-block; border-radius:7px; padding:6px 8px; font-size:10px; font-weight:800; white-space:nowrap }
+.badge.approved { color:var(--green); background:#37d39a15; border:1px solid #37d39a35 }
+.badge.rejected { color:var(--red); background:#ff686815; border:1px solid #ff686835 }
+.badge.pending,.badge.reschedule { color:var(--yellow); background:#f7bd5715; border:1px solid #f7bd5735 }
+.badge.neutral { color:#aeb7c5; background:#8993a112; border:1px solid #8993a125 }
+.actions { display:flex; gap:6px; flex-wrap:wrap; min-width:220px }
+.action-btn { border:1px solid #303744; background:#171c24; color:#c8d0dc; padding:8px 9px; border-radius:8px; font-size:10px; font-weight:800 }
+.action-btn.approve { background:#17382f; color:#6be5b4; border-color:#245b49 }
+.action-btn.reject { background:#3a2024; color:#ff8a8a; border-color:#66343a }
+.action-btn.reschedule { background:#382c1b; color:#f6c16d; border-color:#594323 }
+.action-btn:disabled { opacity:.5; cursor:wait }
+.message { display:none; margin:14px 20px 0; padding:12px; border-radius:9px; font-size:12px; overflow-wrap:anywhere }
+.message.show { display:block }
+.message.error { background:#421f25; color:#ffaaaa; border:1px solid #70343c }
+.message.success { background:#14362b; color:#85edc0; border:1px solid #245d49 }
+.empty { text-align:center; color:var(--muted); padding:45px 20px }
+.footer { display:flex; justify-content:space-between; gap:12px; color:#677181; font-size:10px; margin-top:18px }
+@media(max-width:1100px) {
+  .app { grid-template-columns:190px 1fr }
+  .stats { grid-template-columns:repeat(2,minmax(0,1fr)) }
+  .main { padding:22px }
+}
+@media(max-width:700px) {
+  .app { display:block }
+  .sidebar { padding:16px; border-right:0; border-bottom:1px solid var(--line) }
+  .nav-title,.nav,.sidebar-foot { display:none }
+  .main { padding:20px 12px }
+  .topbar { display:block }
+  .top-actions { margin-top:16px }
+  .stats { gap:9px }
+  .stat { padding:14px }
+  .stat-number { font-size:25px }
+  .filters input { width:100% }
+  .panel-head { padding:15px }
+}
+</style>
 </head>
-
 <body>
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="brand">TAKE A <span>DRIVE.</span></div>
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo">TAKE A <span>DRIVE.</span></div>
+    <div class="sub">AUTOMOTIVE CRM</div>
+    <div class="nav-title">WORKSPACE</div>
+    <div class="nav active">▦ &nbsp; Lead Management</div>
+    <div class="nav">◷ &nbsp; Test Drive Requests</div>
+    <div class="nav">◉ &nbsp; Customers</div>
+    <div class="sidebar-foot">
+      <strong style="color:#dce2eb">Take A Drive CRM</strong><br>
+      Salesforce-powered lead management<br>
+      Local development demo
+    </div>
+  </aside>
 
-      <div class="nav-label">WORKSPACE</div>
-      <div class="nav-item active">▦ &nbsp; Lead Management</div>
-      <div class="nav-item">◷ &nbsp; Test Drive Requests</div>
-      <div class="nav-item">◉ &nbsp; Customers</div>
-
-      <div class="sidebar-bottom">
-        <strong>Take A Drive CRM</strong><br />
-        Salesforce-connected demo<br />
-        Local development
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <div class="kicker">CONTROL CENTER / 01</div>
+        <h1>Lead Management</h1>
+        <p class="subtitle">Review customer enquiries and manage test-drive decisions.</p>
       </div>
-    </aside>
-
-    <main class="main">
-      <header class="topbar">
-        <div>
-          <div class="eyebrow">AUTOMOTIVE CRM</div>
-          <h1>Lead Management</h1>
-          <p class="subtitle">
-            Manage enquiries and review test-drive requests.
-          </p>
-
-          <div class="connection">
-            <span class="dot" id="connectionDot"></span>
-            <span id="connectionText">Checking backend...</span>
-          </div>
-        </div>
-
-        <button class="refresh-btn" id="refreshBtn">
-          ↻ &nbsp; Refresh Leads
-        </button>
-      </header>
-
-      <section class="stats">
-        <div class="stat">
-          <div class="stat-label">Total Leads Loaded</div>
-          <div class="stat-number" id="totalLeads">—</div>
-          <div class="stat-note">Records returned by Salesforce API</div>
-        </div>
-
-        <div class="stat">
-          <div class="stat-label">Pending Approval</div>
-          <div class="stat-number" id="pendingLeads">—</div>
-          <div class="stat-note">Awaiting a decision</div>
-        </div>
-
-        <div class="stat">
-          <div class="stat-label">Approved</div>
-          <div class="stat-number" id="approvedLeads">—</div>
-          <div class="stat-note">Test drives approved</div>
-        </div>
-
-        <div class="stat">
-          <div class="stat-label">Rejected</div>
-          <div class="stat-number" id="rejectedLeads">—</div>
-          <div class="stat-note">Requests rejected</div>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-head">
-          <div>
-            <h2>Customer Enquiries</h2>
-            <p id="resultCount">Loading records...</p>
-          </div>
-
-          <div class="filters">
-            <input
-              id="searchInput"
-              type="search"
-              placeholder="Search name or email..."
-              aria-label="Search leads"
-            />
-
-            <select id="statusFilter" aria-label="Filter by status">
-              <option value="">All lead statuses</option>
-              <option value="New">New</option>
-              <option value="Working">Working</option>
-              <option value="Nurturing">Nurturing</option>
-              <option value="Qualified">Qualified</option>
-              <option value="Unqualified">Unqualified</option>
-            </select>
-          </div>
-        </div>
-
-        <div id="message" class="message" role="status"></div>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Customer</th>
-                <th>Contact</th>
-                <th>Location</th>
-                <th>Lead Status</th>
-                <th>Created</th>
-                <th>Test Drive Actions</th>
-              </tr>
-            </thead>
-
-            <tbody id="leadsBody">
-              <tr>
-                <td colspan="6" class="empty">Loading Salesforce leads...</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <div class="footer">
-        Take A Drive · Salesforce CRM Integration · Local Demo
+      <div class="top-actions">
+        <div class="connection"><span class="dot" id="connectionDot"></span><span id="connectionText">Checking backend...</span></div>
+        <button class="refresh" id="refreshBtn">↻ &nbsp; Refresh data</button>
       </div>
-    </main>
-  </div>
+    </header>
 
-  <script>
-    // Local Express backend
-    const API_BASE = "http://localhost:4000";
+    <section class="stats">
+      <div class="stat"><div class="stat-label">TOTAL LEADS</div><div class="stat-number" id="totalLeads">—</div><div class="stat-note">Loaded from Salesforce</div></div>
+      <div class="stat"><div class="stat-label">PENDING REVIEW</div><div class="stat-number" id="pendingLeads">—</div><div class="stat-note">Waiting for a decision</div></div>
+      <div class="stat"><div class="stat-label">APPROVED</div><div class="stat-number" id="approvedLeads">—</div><div class="stat-note">Test drives approved</div></div>
+      <div class="stat"><div class="stat-label">REJECTED</div><div class="stat-number" id="rejectedLeads">—</div><div class="stat-note">Requests declined</div></div>
+    </section>
 
-    let leads = [];
+    <section class="panel">
+      <div class="panel-head">
+        <div><div class="panel-title">Customer enquiries</div><div class="panel-desc" id="resultCount">Loading records...</div></div>
+        <div class="filters">
+          <input id="searchInput" type="search" placeholder="Search name, email, company...">
+          <select id="statusFilter">
+            <option value="">All lead statuses</option>
+            <option value="New">New</option><option value="Working">Working</option>
+            <option value="Nurturing">Nurturing</option><option value="Qualified">Qualified</option>
+            <option value="Unqualified">Unqualified</option>
+          </select>
+        </div>
+      </div>
+      <div id="message" class="message" role="status"></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Customer</th><th>Contact details</th><th>Location</th><th>Lead / test-drive status</th><th>Date added</th><th>Actions</th></tr></thead>
+          <tbody id="leadsBody"><tr><td colspan="6" class="empty">Loading Salesforce leads...</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+    <footer class="footer"><span>TAKE A DRIVE · SALESFORCE CRM</span><span>ADMIN DASHBOARD · LOCAL DEMO</span></footer>
+  </main>
+</div>
 
-    const leadsBody = document.getElementById("leadsBody");
-    const messageBox = document.getElementById("message");
+<script>
+const API_BASE = "http://localhost:4000";
+let leads = [];
 
-    function escapeHTML(value) {
-      return String(value ?? "").replace(/[&<>"']/g, char => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-      })[char]);
+const leadsBody = document.getElementById("leadsBody");
+const messageBox = document.getElementById("message");
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  })[char]);
+}
+
+function showMessage(text, type = "success") {
+  messageBox.textContent = text;
+  messageBox.className = `message show ${type}`;
+}
+function hideMessage() {
+  messageBox.textContent = "";
+  messageBox.className = "message";
+}
+function setConnection(online, text) {
+  document.getElementById("connectionDot").classList.toggle("online", online);
+  document.getElementById("connectionText").textContent = text;
+}
+function badgeClass(status) {
+  const value = String(status || "").toLowerCase();
+  if (value.includes("approv") || value === "completed") return "approved";
+  if (value.includes("reject") || value.includes("cancel")) return "rejected";
+  if (value.includes("reschedule") || value.includes("pending")) return "pending";
+  return "neutral";
+}
+
+function renderStats() {
+  document.getElementById("totalLeads").textContent = leads.length;
+  document.getElementById("pendingLeads").textContent = leads.filter(
+    l => String(l.Test_Drive_Status__c || "").toLowerCase() === "pending approval"
+  ).length;
+  document.getElementById("approvedLeads").textContent = leads.filter(
+    l => String(l.Test_Drive_Status__c || "").toLowerCase() === "approved"
+  ).length;
+  document.getElementById("rejectedLeads").textContent = leads.filter(
+    l => String(l.Test_Drive_Status__c || "").toLowerCase() === "rejected"
+  ).length;
+}
+
+function renderLeads() {
+  const search = document.getElementById("searchInput").value.trim().toLowerCase();
+  const filter = document.getElementById("statusFilter").value;
+
+  const filtered = leads.filter(lead => {
+    const name = `${lead.FirstName || ""} ${lead.LastName || ""}`.toLowerCase();
+    const matchesSearch = name.includes(search) ||
+      String(lead.Email || "").toLowerCase().includes(search) ||
+      String(lead.Company || "").toLowerCase().includes(search);
+    return matchesSearch && (!filter || lead.Status === filter);
+  });
+
+  document.getElementById("resultCount").textContent =
+    `Showing ${filtered.length} of ${leads.length} records`;
+
+  if (!filtered.length) {
+    leadsBody.innerHTML = '<tr><td colspan="6" class="empty">No matching leads found.</td></tr>';
+    return;
+  }
+
+  leadsBody.innerHTML = filtered.map(lead => {
+    const name = `${lead.FirstName || ""} ${lead.LastName || ""}`.trim() || "Unnamed Lead";
+    const initials = name.split(/\s+/).slice(0, 2).map(s => s[0] || "").join("").toUpperCase();
+    const testStatus = lead.Test_Drive_Status__c || "Not Set";
+    const location = [lead.City, lead.State].filter(Boolean).join(", ") || "—";
+    const created = lead.CreatedDate ? new Date(lead.CreatedDate).toLocaleDateString() : "—";
+    const id = escapeHTML(lead.Id);
+
+    return `<tr>
+      <td><div class="customer"><div class="avatar">${escapeHTML(initials)}</div>
+        <div><div class="customer-name">${escapeHTML(name)}</div>
+        <div class="muted">${escapeHTML(lead.Company || "Individual Buyer")}</div></div></div></td>
+      <td><div>${escapeHTML(lead.Email || "No email")}</div>
+        <div class="muted">${escapeHTML(lead.Phone || lead.MobilePhone || "No phone")}</div></td>
+      <td>${escapeHTML(location)}</td>
+      <td><div><span class="badge neutral">${escapeHTML(lead.Status || "Unknown")}</span></div>
+        <div style="margin-top:7px"><span class="badge ${badgeClass(testStatus)}">${escapeHTML(testStatus)}</span></div></td>
+      <td>${escapeHTML(created)}</td>
+      <td><div class="actions">
+        <button type="button" class="action-btn approve" data-id="${id}" data-status="Approved">✓ Approve</button>
+        <button type="button" class="action-btn reject" data-id="${id}" data-status="Rejected">✕ Reject</button>
+        <button type="button" class="action-btn reschedule" data-id="${id}" data-status="Reschedule Required">↻ Reschedule</button>
+      </div></td>
+    </tr>`;
+  }).join("");
+}
+
+async function loadLeads() {
+  hideMessage();
+  leadsBody.innerHTML = '<tr><td colspan="6" class="empty">Loading Salesforce leads...</td></tr>';
+
+  try {
+    const response = await fetch(`${API_BASE}/api/leads`);
+    const data = await response.json().catch(() => ({}));
+
+    if (response.status === 401) {
+      setConnection(false, "Salesforce not connected");
+      leadsBody.innerHTML = `<tr><td colspan="6" class="empty">
+        Salesforce is not connected. <a href="${API_BASE}/auth" target="_blank" rel="noopener">Connect Salesforce</a>, then refresh.
+      </td></tr>`;
+      return;
     }
+    if (!response.ok) throw new Error(data.error || data.message || `API returned HTTP ${response.status}`);
+    if (!Array.isArray(data)) throw new Error("Unexpected API response: expected a leads array.");
 
-    function showMessage(text, type = "success") {
-      messageBox.textContent = text;
-      messageBox.className = `message show ${type}`;
-    }
+    leads = data;
+    setConnection(true, "Backend connected · Leads loaded");
+    renderStats();
+    renderLeads();
+  } catch (error) {
+    setConnection(false, "Backend unavailable");
+    leadsBody.innerHTML = `<tr><td colspan="6" class="empty">${escapeHTML(error.message)}<br><br>Make sure backend is running at localhost:4000.</td></tr>`;
+    showMessage("Could not fetch leads. Check the backend terminal and Salesforce connection.", "error");
+  }
+}
 
-    function hideMessage() {
-      messageBox.textContent = "";
-      messageBox.className = "message";
-    }
+async function updateTestDriveStatus(leadId, status, button) {
+  if (!leadId || !status) return;
 
-    function setConnection(online, text) {
-      document.getElementById("connectionDot")
-        .classList.toggle("online", online);
+  const originalText = button.textContent;
+  button.disabled = true;
+  button.textContent = "Saving...";
+  hideMessage();
 
-      document.getElementById("connectionText").textContent = text;
-    }
-
-    function badgeClass(status) {
-      const value = String(status || "").toLowerCase();
-
-      if (value.includes("approv") || value === "completed") {
-        return "approved";
+  try {
+    const response = await fetch(
+      `${API_BASE}/api/leads/${encodeURIComponent(leadId)}/test-drive-status`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status })
       }
+    );
 
-      if (value.includes("reject")) return "rejected";
-      if (value.includes("cancel")) return "cancelled";
-      if (value.includes("reschedule")) return "reschedule";
-      if (value.includes("pending")) return "pending";
-
-      return "";
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(result.error || result.message || `Status update failed (HTTP ${response.status})`);
     }
 
-    function renderStats() {
-      document.getElementById("totalLeads").textContent = leads.length;
+    await loadLeads();
+    showMessage(`Test-drive status updated to ${status}.`, "success");
+  } catch (error) {
+    console.error("Status update failed:", error);
+    showMessage(error.message || "Status update failed. Check backend terminal.", "error");
+    alert(`Could not update status:\n${error.message}`);
+  } finally {
+    button.disabled = false;
+    button.textContent = originalText;
+  }
+}
 
-      document.getElementById("pendingLeads").textContent =
-        leads.filter(lead =>
-          String(lead.Test_Drive_Status__c || "")
-            .toLowerCase() === "pending approval"
-        ).length;
+// Important: this click listener works even after the table rows are re-rendered.
+leadsBody.addEventListener("click", event => {
+  const button = event.target.closest("button[data-id][data-status]");
+  if (!button || button.disabled) return;
+  updateTestDriveStatus(button.dataset.id, button.dataset.status, button);
+});
 
-      document.getElementById("approvedLeads").textContent =
-        leads.filter(lead =>
-          String(lead.Test_Drive_Status__c || "")
-            .toLowerCase() === "approved"
-        ).length;
+document.getElementById("refreshBtn").addEventListener("click", loadLeads);
+document.getElementById("searchInput").addEventListener("input", renderLeads);
+document.getElementById("statusFilter").addEventListener("change", renderLeads);
 
-      document.getElementById("rejectedLeads").textContent =
-        leads.filter(lead =>
-          String(lead.Test_Drive_Status__c || "")
-            .toLowerCase() === "rejected"
-        ).length;
-    }
-
-    function renderLeads() {
-      const search = document.getElementById("searchInput")
-        .value.trim().toLowerCase();
-
-      const statusFilter = document.getElementById("statusFilter").value;
-
-      const filtered = leads.filter(lead => {
-        const name = `${lead.FirstName || ""} ${lead.LastName || ""}`
-          .toLowerCase();
-
-        const matchesSearch =
-          name.includes(search) ||
-          String(lead.Email || "").toLowerCase().includes(search) ||
-          String(lead.Company || "").toLowerCase().includes(search);
-
-        const matchesStatus =
-          !statusFilter || lead.Status === statusFilter;
-
-        return matchesSearch && matchesStatus;
-      });
-
-      document.getElementById("resultCount").textContent =
-        `${filtered.length} of ${leads.length} records`;
-
-      if (!filtered.length) {
-        leadsBody.innerHTML = `
-          <tr>
-            <td colspan="6" class="empty">
-              No matching leads found.
-            </td>
-          </tr>
-        `;
-        return;
-      }
-
-      leadsBody.innerHTML = filtered.map(lead => {
-        const fullName =
-          `${lead.FirstName || ""} ${lead.LastName || ""}`.trim() ||
-          "Unnamed Lead";
-
-        const testStatus = lead.Test_Drive_Status__c || "Not Set";
-
-        const location = [lead.City, lead.State]
-          .filter(Boolean).join(", ") || "—";
-
-        const created = lead.CreatedDate
-          ? new Date(lead.CreatedDate).toLocaleDateString()
-          : "—";
-
-        const id = escapeHTML(lead.Id);
-
-        return `
-          <tr>
-            <td>
-              <div class="lead-name">${escapeHTML(fullName)}</div>
-              <div class="muted">${escapeHTML(lead.Company || "Individual Buyer")}</div>
-            </td>
-
-            <td>
-              <div>${escapeHTML(lead.Email || "No email")}</div>
-              <div class="muted">${escapeHTML(lead.Phone || lead.MobilePhone || "No phone")}</div>
-            </td>
-
-            <td>${escapeHTML(location)}</td>
-
-            <td>
-              <div><span class="badge">${escapeHTML(lead.Status || "Unknown")}</span></div>
-              <div style="margin-top:7px">
-                <span class="badge ${badgeClass(testStatus)}">
-                  ${escapeHTML(testStatus)}
-                </span>
-              </div>
-            </td>
-
-            <td>${escapeHTML(created)}</td>
-
-            <td>
-              <div class="actions">
-                <button class="action-btn approve"
-                  data-id="${id}" data-status="Approved">
-                  Approve
-                </button>
-
-                <button class="action-btn reject"
-                  data-id="${id}" data-status="Rejected">
-                  Reject
-                </button>
-
-                <button class="action-btn reschedule"
-                  data-id="${id}" data-status="Reschedule Required">
-                  Reschedule
-                </button>
-              </div>
-            </td>
-          </tr>
-        `;
-      }).join("");
-    }
-
-    async function loadLeads() {
-      hideMessage();
-      leadsBody.innerHTML = `
-        <tr><td colspan="6" class="empty">Loading Salesforce leads...</td></tr>
-      `;
-
-      try {
-        const response = await fetch(`${API_BASE}/api/leads`);
-
-        if (response.status === 401) {
-          setConnection(false, "Salesforce not connected");
-          leadsBody.innerHTML = `
-            <tr>
-              <td colspan="6" class="empty">
-                <p>Connect Salesforce before loading leads.</p>
-                <p style="margin-top:12px">
-                  <a href="${API_BASE}/auth" target="_blank" rel="noopener">
-                    Connect Salesforce
-                  </a>
-                </p>
-              </td>
-            </tr>
-          `;
-          return;
-        }
-
-        if (!response.ok) {
-          throw new Error(`API returned HTTP ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (!Array.isArray(data)) {
-          throw new Error("Unexpected API response. Expected a leads array.");
-        }
-
-        leads = data;
-        setConnection(true, "Backend API reachable · Leads loaded");
-        renderStats();
-        renderLeads();
-
-      } catch (error) {
-        setConnection(false, "Could not load leads");
-
-        leadsBody.innerHTML = `
-          <tr>
-            <td colspan="6" class="empty">
-              ${escapeHTML(error.message)}<br /><br />
-              Make sure your backend is running at localhost:4000.
-            </td>
-          </tr>
-        `;
-
-        showMessage(
-          "Could not fetch leads. Check the backend terminal and Salesforce connection.",
-          "error"
-        );
-      }
-    }
-
-    async function updateTestDriveStatus(id, status, button) {
-      const confirmed = window.confirm(
-        `Change test-drive status to "${status}"?`
-      );
-
-      if (!confirmed) return;
-
-      button.disabled = true;
-      hideMessage();
-
-      try {
-        const response = await fetch(
-          `${API_BASE}/api/leads/${encodeURIComponent(id)}/test-drive-status`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ status })
-          }
-        );
-
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error(result.error || `Update failed (${response.status})`);
-        }
-
-        showMessage(`Test-drive status updated to "${status}".`, "success");
-
-        // Refresh from Salesforce after the update
-        await loadLeads();
-
-      } catch (error) {
-        showMessage(error.message, "error");
-      } finally {
-        button.disabled = false;
-      }
-    }
-
-    leadsBody.addEventListener("click", event => {
-      const button = event.target.closest("button[data-status]");
-
-      if (!button) return;
-
-      updateTestDriveStatus(
-        button.dataset.id,
-        button.dataset.status,
-        button
-      );
-    });
-
-    document.getElementById("refreshBtn")
-      .addEventListener("click", loadLeads);
-
-    document.getElementById("searchInput")
-      .addEventListener("input", renderLeads);
-
-    document.getElementById("statusFilter")
-      .addEventListener("change", renderLeads);
-
-    loadLeads();
-  </script>
+loadLeads();
+</script>
 </body>
 </html>
